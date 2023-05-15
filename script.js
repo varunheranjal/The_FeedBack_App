@@ -1,13 +1,17 @@
 /// -- Global Values for DOM elements and Variables/functions shown here --//
 
 const MAX_CHARS = 150;
+const BASE_URL = 'https://bytegrad.com/course-assets/js/1/api';
 const textArea = document.querySelector('.form__textarea');
 const counterEl = document.querySelector('.counter');
 const formElement = document.querySelector('.form');
 const feedbackListElement = document.querySelector('.feedbacks');
 const submitBtnEl = document.querySelector('.submit-btn');
 const spinnerEl = document.querySelector('.spinner');
+const hashtagListElement = document.querySelector('.hashtags');
 
+
+///Creating a New Feedback (HTML) Item for the List
 const renderFeedbackItem = (feedbackItem) => {
         // -- Have to create a New HTML item for the Feedback Input entered. Im using a Template Literal to copy a boilerplate code so that i can edit it accordingly
 
@@ -107,7 +111,7 @@ const submitHandler = (event) => {
 
     //Send this Feedback item to the Server (obviously!)
     // Same URL endpoint of course (as used in line 126 below)
-    fetch('https://bytegrad.com/course-assets/js/1/api/feedbacks', {
+    fetch(`${BASE_URL}/feedbacks`, {
         method: 'POST',
         body: JSON.stringify(feedBackItem),
         headers: {
@@ -138,10 +142,42 @@ formElement.addEventListener('submit', submitHandler);
 
 
 ///--- FEEDBACK LIST COMPONENT ---///
+// I have wrapped the below in an IIFE for better modularity and so that the 'clickHandler' functions in the Feedback List component and this Hashtag list component do not conflict with each other
+(() => {
+    const clickHandler = (event) => {
+        //get the clicked HTML element
+        const clickedElement = event.target;
+
+        //determine if the user wants to Expand the item or Upvote the item
+        const upvoteIntent = clickedElement.className.includes('upvote');
+        //run the appropriate logic for each item
+        if (upvoteIntent) {
+            //get the closest upvote button
+            const upvoteBtnElement = clickedElement.closest('.upvote');
+
+            //disable the Upvote button so that user cannot click on it again (avoid Spam!)
+            upvoteBtnElement.disabled = true;
+
+            //select the Upvote Count element within the upvote button
+            const upvoteCountElement = upvoteBtnElement.querySelector('.upvote__count');
+            //get currently displayed Count on this Item which is clicked -- The + button in front of the value converts it from a String to a Number (weird i know. Dont ask me...)
+            let upvoteCount = +upvoteCountElement.textContent;
+            //increment the upvote count by 1
+            upvoteCount = upvoteCount + 1;
+            //set the new/updated upvote count
+            upvoteCountElement.textContent = upvoteCount;
+
+        }else {
+            //Expand the Feedback item
+            clickedElement.closest('.feedback').classList.toggle('feedback--expand');
+        }
+}
+
+feedbackListElement.addEventListener('click', clickHandler);
 
 // I'm utilizing a simple 'fetch' Promise and Thenables to Get the feedbacks data from the below mentioned URL Endpoint
 
-fetch('https://bytegrad.com/course-assets/js/1/api/feedbacks')
+fetch(`${BASE_URL}/feedbacks`)
         .then(response => {
         return response.json()
         .then(data => {
@@ -160,4 +196,43 @@ fetch('https://bytegrad.com/course-assets/js/1/api/feedbacks')
         
 })
 });
+})();
+
+
+///Hashtag List Component --- To filter out the Feedback items on the list via the #Company Names shown on the right side list///
+
+//I have used an IIFE below for better modularity and so that the 'clickHandler' functions in the Feedback List component and this Hashtag list component do not conflict with each other
+
+(() => {
+    const clickHandler = (event) => {
+        //get the clicked element in the hash list
+        const clickedElement = event.target;
+
+        //stop the function if in case the user clicks outside of the buttons
+        if (clickedElement.className === 'hashtags') return;
+        
+            //extract the Company Name first to check which one the user clicked
+        const companyNameHashtag = clickedElement.textContent.substring(1).toLowerCase().trim();
+
+            //iterate over each item in the Main Feedback Items List to see if any Reviews for this company exists
+        feedbackListElement.childNodes.forEach(childNode => {
+            //stop the iteration if it is a Text Node (like empty lines etc..)
+            if (childNode.nodeType === 3) return;
+
+            //extract the Company Name
+            const compNameFeedbackItem = childNode.querySelector('.feedback__company').textContent.toLowerCase().trim();
+
+            //remove all other Feedback items of those company names which are not equal to the one above
+            if (companyNameHashtag !== compNameFeedbackItem) {
+                childNode.remove();
+            }
+
+            });
+        };
+
+
+hashtagListElement.addEventListener('click', clickHandler);
+})();
+
+
 
