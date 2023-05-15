@@ -102,8 +102,27 @@ const submitHandler = (event) => {
         text: text
     }
 
-    // Render the Feedback Item i.e. Show or Feed the Item into this list
+    // Render the Feedback Item i.e. Show or Display the Item in this list
     renderFeedbackItem(feedBackItem);
+
+    //Send this Feedback item to the Server (obviously!)
+    // Same URL endpoint of course (as used in line 126 below)
+    fetch('https://bytegrad.com/course-assets/js/1/api/feedbacks', {
+        method: 'POST',
+        body: JSON.stringify(feedBackItem),
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        if(!response.ok) {
+            console.log('Something went wrong mate');
+            return;
+        }
+        console.log('Successfully Submitted');
+    }).catch(error => {
+        console.log(error);
+    });
     //clear the Text Area
     textArea.value = '';
 
