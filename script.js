@@ -36,7 +36,8 @@ const renderFeedbackItem = (feedbackItem) => {
         feedbackListElement.insertAdjacentHTML('beforeend', feedbackItemHTML);
 };
 
-//--- COUNTER COMPONENT FOR THE TEXT FIELD --- START //
+/*--- COUNTER COMPONENT FOR THE TEXT FIELD --- START 
+This function works by getting the current number of characters that the user has typed and subtracting that number from the maximum number of characters that the user can type. The function then sets the text of the counter element to the new number of characters. */
 
 const inputHandler = () => {
     // first, specify the max number of characters allowed
@@ -55,7 +56,10 @@ textArea.addEventListener('input', inputHandler);
 
 //--- COUNTER COMPONENT FOR THE TEXT FIELD --- FINISH //
 
-//--- FORM COMPONENT and The SUBMIT EVENT --- START//
+
+
+/*--- FORM COMPONENT and The SUBMIT EVENT --- START 
+This function works by getting the text from the text area and then submitting it to the API. The function also displays a spinner while the feedback item is being submitted. Once the feedback item has been submitted, the function clears the text area and removes the spinner */
 
 //validate via a Visual Indicator -- Im using a CSS class element defined in the style.css page for this
 const showVisualIndicator = (textCheck) => {
@@ -140,9 +144,14 @@ const submitHandler = (event) => {
 
 formElement.addEventListener('submit', submitHandler);
 
+///FORM COMPONENT --- FINISH ///
 
-///--- FEEDBACK LIST COMPONENT ---///
-// I have wrapped the below in an IIFE for better modularity and so that the 'clickHandler' functions in the Feedback List component and this Hashtag list component do not conflict with each other
+
+
+/*--- FEEDBACK LIST COMPONENT ---
+The feedback list component section defines a function that displays the list of feedback items. The function works by getting the feedback items from the API and then adding them to the list element. The function also adds a click handler to each feedback item that upvotes the item when it is clicked. */
+
+// FYI ---> I have wrapped the below code in an IIFE for better modularity and so that the 'clickHandler' functions in this Feedback List component and the Hashtag list component do not conflict with each other
 (() => {
     const clickHandler = (event) => {
         //get the clicked HTML element
@@ -200,6 +209,8 @@ fetch(`${BASE_URL}/feedbacks`)
 
 
 ///Hashtag List Component --- To filter out the Feedback items on the list via the #Company Names shown on the right side list///
+
+/* This function works by getting the company name from the hashtag that the user clicked and then removing all feedback items that do not match the company name. */
 
 //I have used an IIFE below for better modularity and so that the 'clickHandler' functions in the Feedback List component and this Hashtag list component do not conflict with each other
 
