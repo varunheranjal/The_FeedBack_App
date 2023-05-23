@@ -1,14 +1,14 @@
 /// -- Global Values for DOM elements and Variables/functions shown here --//
 
-const MAX_CHARS = 150;
-const BASE_URL = 'https://bytegrad.com/course-assets/js/1/api';
-const textArea = document.querySelector('.form__textarea');
-const counterEl = document.querySelector('.counter');
-const formElement = document.querySelector('.form');
-const feedbackListElement = document.querySelector('.feedbacks');
-const submitBtnEl = document.querySelector('.submit-btn');
-const spinnerEl = document.querySelector('.spinner');
-const hashtagListElement = document.querySelector('.hashtags');
+const MAX_CHARS = 150;  //The maximum number of characters allowed in the text input field.
+const BASE_URL = 'https://bytegrad.com/course-assets/js/1/api';    //The URL of the API that is used to submit feedback.
+const textArea = document.querySelector('.form__textarea');   //a reference to the text input field for the user to input the feedback
+const counterEl = document.querySelector('.counter');   //a reference to the element that displays the number of characters left in the text input field.
+const formElement = document.querySelector('.form');   //a reference to the form element
+const feedbackListElement = document.querySelector('.feedbacks');  //a reference to the element that displays the list of feedback items
+const submitBtnEl = document.querySelector('.submit-btn');    // The Submit button..duh! 
+const spinnerEl = document.querySelector('.spinner');  // the spinner element that is displayed while the feedback is being submitted OR when user reloads page
+const hashtagListElement = document.querySelector('.hashtags');   //a reference to the element that displays the list of hashtags.
 
 
 ///Creating a New Feedback (HTML) Item for the List
